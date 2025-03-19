@@ -1,0 +1,21 @@
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import React from "react";
+
+const SearchInput = () => {
+  return (
+    <form action="">
+      <div className="relative">
+        <Search className="absolute left-0 top-1/2 h-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          type="text"
+          name="search"
+          className="pl-8 w-48 focus-visible:ring-1"
+          placeholder="search articles..."
+        />
+      </div>
+    </form>
+  );
+};
+
+export default SearchInput;
