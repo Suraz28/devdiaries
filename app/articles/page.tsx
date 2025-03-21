@@ -10,18 +10,21 @@ const ITEMS_PER_PAGE = 3; // Number of items per page
 
 
 type SearchPageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Record<string, string | string[] | undefined>;
 };
 
 
-export default async function Page({ searchParams }: SearchPageProps) {
-  // Wait for searchParams to resolve
-  const resolvedSearchParams = await searchParams;
 
+export default async function Page({ searchParams }: SearchPageProps) {
   // Extract search and page params
-  const searchText = Array.isArray(resolvedSearchParams.search) ? resolvedSearchParams.search[0] : resolvedSearchParams.search || "";
-  const currentPage = Number(Array.isArray(resolvedSearchParams.page) ? resolvedSearchParams.page[0] : resolvedSearchParams.page) || 1;
-  
+  const searchText = Array.isArray(searchParams.search)
+    ? searchParams.search[0]
+    : searchParams.search || "";
+
+  const currentPage = Number(
+    Array.isArray(searchParams.page) ? searchParams.page[0] : searchParams.page
+  ) || 1;
+
   const skip = (currentPage - 1) * ITEMS_PER_PAGE;
   const take = ITEMS_PER_PAGE;
 
@@ -77,4 +80,5 @@ export default async function Page({ searchParams }: SearchPageProps) {
     </div>
   );
 }
+
 

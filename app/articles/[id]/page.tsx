@@ -2,16 +2,22 @@ import ArticleDetailPage from "@/components/articles/article-detail-page";
 import { prisma } from "@/lib/prisma";
 import React from "react";
 
-type ArticleDetailPageProps = {
+interface PageProps {
   params: { id: string };
-};
+  searchParams: Record<string, string | string[] | undefined>;
+}
 
-const page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
-  const { id } = params; // Directly destructure params to get the `id`
+// ✅ Remove React.FC to allow async function
+const Page = async ({ params }: PageProps) => {
+  if (!params?.id) {
+    return <h1>Invalid Article ID</h1>;
+  }
+
+  const { id } = params;
+
+  // Fetch the article from the database
   const article = await prisma.articles.findUnique({
-    where: {
-      id,
-    },
+    where: { id },
     include: {
       author: {
         select: {
@@ -23,6 +29,7 @@ const page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
     },
   });
 
+  // Handle the case if the article is not found
   if (!article) {
     return <h1>Article not found.</h1>;
   }
@@ -34,4 +41,4 @@ const page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
   );
 };
 
-export default page;
+export default Page;
