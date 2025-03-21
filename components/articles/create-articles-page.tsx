@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import 'react-quill-new/dist/quill.snow.css';
 import { createArticle } from "@/actions/create-article";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
  
@@ -116,10 +117,12 @@ const CreateArticlePage = () => {
               </div>
             )}
             <div className="flex justify-end gap-4">
-              <Button type="button" variant="outline">
+              <Link href={"/dashboard"}>
+              <Button type="button" variant="outline" className="cursor-pointer">
                 Cancel
               </Button>
-              <Button disabled={isPending} type="submit">
+              </Link>
+              <Button disabled={isPending} type="submit" className="cursor-pointer">
                 {isPending ? "Loading..." : "Publish Article"}
               </Button>
             </div>

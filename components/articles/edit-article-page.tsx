@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Articles } from "@prisma/client";
 import { updateArticles } from "@/actions/update-article";
 import Image from "next/image";
+import Link from "next/link";
 
 type EditPropsPage = {
   article: Articles;
@@ -128,10 +129,12 @@ const EditArticlePage: React.FC<EditPropsPage> = ({ article }) => {
             </div>
 
             <div className="flex justify-end gap-4">
-              <Button type="button" variant="outline">
+            <Link href={"/dashboard"}>
+              <Button type="button" variant="outline" className="cursor-pointer">
                 Discard Changes
               </Button>
-              <Button disabled={isPending} type="submit">
+              </Link>
+              <Button disabled={isPending} type="submit" className="cursor-pointer">
                 {isPending ? "Loading..." : "Update Article"}
               </Button>
             </div>

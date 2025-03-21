@@ -36,7 +36,7 @@ export async function BlogDashboard() {
           </p>
         </div>
         <Link href={"/dashboard/articles/create"}>
-          <Button className="gap-2">
+          <Button className="gap-2 cursor-pointer" >
             <PlusCircle className="h-4 w-4" />
             New Article
           </Button>
