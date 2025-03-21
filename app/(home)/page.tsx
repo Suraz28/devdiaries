@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import BlogFooter from "@/components/home/blog-footer";
-import { AllArticlesPageSkeleton } from "../dashboard/articles/page";
+import { AllArticlesPageSkeleton } from "@/lib/all-articles-page-skeleton";
 
 const page = async () => {
   return (

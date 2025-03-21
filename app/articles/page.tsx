@@ -6,43 +6,45 @@ import AllArticlesPage from "../../components/articles/all-articles-page";
 import { fetchArticleByQuery } from "@/lib/query/fetch-articles";
 import { AllArticlesPageSkeleton } from "@/lib/all-articles-page-skeleton";
 
-
-type SearchPageProps = {
-  // searchParams: { search?: string; page?: string };
-  searchParams: Record<string, string | undefined>;
-};
-
 const ITEMS_PER_PAGE = 3; // Number of items per page
 
+
+type SearchPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+
 export default async function Page({ searchParams }: SearchPageProps) {
-  const searchText = searchParams.search || "";
-  const currentPage = Number(searchParams.page) || 1;
+  // Wait for searchParams to resolve
+  const resolvedSearchParams = await searchParams;
+
+  // Extract search and page params
+  const searchText = Array.isArray(resolvedSearchParams.search) ? resolvedSearchParams.search[0] : resolvedSearchParams.search || "";
+  const currentPage = Number(Array.isArray(resolvedSearchParams.page) ? resolvedSearchParams.page[0] : resolvedSearchParams.page) || 1;
+  
   const skip = (currentPage - 1) * ITEMS_PER_PAGE;
   const take = ITEMS_PER_PAGE;
 
+  // Fetch articles
   const { articles, total } = await fetchArticleByQuery(searchText, skip, take);
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
 
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        {/* Page Header */}
         <div className="mb-12 space-y-6 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             All Articles
           </h1>
-          {/* Search Bar */}
-          <Suspense>
+          <Suspense fallback={<AllArticlesPageSkeleton />}>
             <ArticleSearchInput />
           </Suspense>
         </div>
-        
-        {/* All article page */}
-        <Suspense fallback={<AllArticlesPageSkeleton/>}>
+
+        <Suspense fallback={<AllArticlesPageSkeleton />}>
           <AllArticlesPage articles={articles} />
         </Suspense>
 
-        {/* Pagination */}
         <div className="mt-12 flex justify-center gap-2">
           {/* Prev Button */}
           <Link href={`?search=${searchText}&page=${currentPage - 1}`} passHref>
@@ -75,3 +77,4 @@ export default async function Page({ searchParams }: SearchPageProps) {
     </div>
   );
 }
+
