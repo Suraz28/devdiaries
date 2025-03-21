@@ -1,10 +1,11 @@
-import BlogFooter from "@/components/home/blog-footer";
 import { Navbar } from "@/components/home/header/navbar";
 import HeroSection from "@/components/home/hero-section";
-// import { TopArticles } from "@/components/home/top-articles";
+import TopArticles from "@/components/home/top-articles";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React, { Suspense } from "react";
+import BlogFooter from "@/components/home/blog-footer";
+import { AllArticlesPageSkeleton } from "../dashboard/articles/page";
 
 const page = async () => {
   return (
@@ -23,8 +24,8 @@ const page = async () => {
           </div>
 
           {/* Top Articles */}
-          <Suspense fallback={<h1>Loading....</h1>}>
-            {/* <TopArticles/> */}
+          <Suspense fallback={<AllArticlesPageSkeleton/>}>
+            <TopArticles/>
           </Suspense>
 
           <div className="mt-12 text-center">
