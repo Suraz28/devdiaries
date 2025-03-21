@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
   
   const ITEMS_PER_PAGE = 3; // Number of items per page
   
-  const page: React.FC<SearchPageProps> = async ({ searchParams }) => {
+  const page = async ({ searchParams }: SearchPageProps) => {
     const searchText = searchParams.search || "";
     const currentPage = Number(searchParams.page) || 1;
     const skip = (currentPage - 1) * ITEMS_PER_PAGE;
