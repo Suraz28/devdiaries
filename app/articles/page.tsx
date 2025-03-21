@@ -8,7 +8,8 @@ import { AllArticlesPageSkeleton } from "@/lib/all-articles-page-skeleton";
 
 
 type SearchPageProps = {
-  searchParams: { search?: string; page?: string };
+  // searchParams: { search?: string; page?: string };
+  searchParams: Record<string, string | undefined>;
 };
 
 const ITEMS_PER_PAGE = 3; // Number of items per page
