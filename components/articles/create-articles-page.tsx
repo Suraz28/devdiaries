@@ -65,6 +65,12 @@ const CreateArticlePage = () => {
                 <option value="technology">Technology</option>
                 <option value="programming">Programming</option>
                 <option value="web-development">Web Development</option>
+                <option value="CyberSecurity">CyberSecurity</option>
+                <option value="Science">Science</option> 
+                <option value="Politics">Politics</option> 
+                <option value="Food & Lifestyle">Food & Lifestyle</option>
+                <option value="HealthCare">HealthCare</option>
+                <option value="HotTopics">HotTopics</option>
                 <option value="other">Other</option>
               </select>
               {formState.errors.category && (
