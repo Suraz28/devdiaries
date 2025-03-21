@@ -6,7 +6,6 @@ import {
   BarChart,
   FileText,
   LayoutDashboard,
-  MessageCircle,
   Settings,
 } from "lucide-react";
 import Link from "next/link";
