@@ -2,10 +2,10 @@
   import { Button } from "@/components/ui/button";
   import React, { Suspense } from "react";
   import { Card } from "@/components/ui/card";
-  import { Skeleton } from "@/components/ui/skeleton";
   import Link from "next/link";
 import AllArticlesPage from "../../components/articles/all-articles-page";
 import { fetchArticleByQuery } from "@/lib/query/fetch-articles";
+import { Skeleton } from "@/components/ui/skeleton";
   
   type SearchPageProps = {
     searchParams: { search?: string; page?: string };
