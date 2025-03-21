@@ -5,11 +5,6 @@ import TopArticles from "@/components/home/top-articles";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React, { Suspense } from "react";
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'DevDairies',
-};
 
 const page = async () => {
   return (
