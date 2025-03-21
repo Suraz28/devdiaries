@@ -3,11 +3,11 @@ import { prisma } from "@/lib/prisma";
 import React from "react";
 
 type ArticleDetailPageProps = {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 };
 
 const page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
-  const id = (await params).id;
+  const { id } = params; // Directly destructure params to get the `id`
   const article = await prisma.articles.findUnique({
     where: {
       id,
@@ -22,12 +22,14 @@ const page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
       },
     },
   });
+
   if (!article) {
     return <h1>Article not found.</h1>;
   }
+
   return (
     <div>
-      <ArticleDetailPage article={article} /> 
+      <ArticleDetailPage article={article} />
     </div>
   );
 };
