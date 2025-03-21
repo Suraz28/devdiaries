@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import "react-quill-new/dist/quill.snow.css";
+import 'react-quill-new/dist/quill.snow.css';
 import { createArticle } from "@/actions/create-article";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -13,9 +13,9 @@ const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 const CreateArticlePage = () => {
   const [content, setContent] = useState("");
-  const [featuredImage, setFeaturedImage] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string>("");
-  
+  const [featuredImage, setFeaturedImage] = useState<File | null>(null);
+
   const [formState, action, isPending] = useActionState(createArticle, {
     errors: {},
   });
@@ -35,17 +35,15 @@ const CreateArticlePage = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     const cleanedContent = content.trim() === "<p><br></p>" ? "" : content.trim();
-  
+
     const formData = new FormData(event.currentTarget);
     formData.append("content", cleanedContent);
-  
-    // Append the file to form data if there is a valid file
     if (featuredImage) {
       formData.append("featuredImage", featuredImage);
     }
-  
+
     startTransition(() => {
       action(formData);
     });
@@ -106,7 +104,7 @@ const CreateArticlePage = () => {
                 name="featuredImage"
                 type="file"
                 accept="image/*"
-                onChange={handleFileChange}  // Add the file change handler
+                onChange={handleFileChange}
               />
               {fileError && (
                 <span className="font-medium text-sm text-red-500">{fileError}</span>
@@ -120,13 +118,18 @@ const CreateArticlePage = () => {
 
             <div className="space-y-2">
               <Label>Content</Label>
-              <ReactQuill theme="snow" value={content} onChange={setContent} />
+              <ReactQuill
+                theme="snow"
+                value={content}
+                onChange={setContent}
+              />
               {formState.errors.content && (
                 <span className="font-medium text-sm text-red-500">
                   {formState.errors.content[0]}
                 </span>
               )}
             </div>
+
             {formState.errors.formErrors && (
               <div className="dark:bg-transparent bg-red-100 p-2 border border-red-600">
                 <span className="font-medium text-sm text-red-500">
@@ -134,6 +137,7 @@ const CreateArticlePage = () => {
                 </span>
               </div>
             )}
+
             <div className="flex justify-end gap-4">
               <Link href={"/dashboard"}>
                 <Button type="button" variant="outline" className="cursor-pointer">
