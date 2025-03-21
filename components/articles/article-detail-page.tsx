@@ -74,7 +74,7 @@ const ArticleDetailPage = async({ article }: ArticleDetailPageProps) => {
                   {article.author.name}
                 </p>
                 <p className="text-sm">
-                  {article.createdAt.toDateString()} · {12} min read
+                  {article.createdAt.toDateString()} · {4} min read
                 </p>
               </div>
             </div>
