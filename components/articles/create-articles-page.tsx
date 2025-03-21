@@ -4,20 +4,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import 'react-quill-new/dist/quill.snow.css';
+import "react-quill-new/dist/quill.snow.css";
 import { createArticle } from "@/actions/create-article";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
- 
+
 const CreateArticlePage = () => {
   const [content, setContent] = useState("");
-
+  const [featuredImage, setFeaturedImage] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string>("");
+  
   const [formState, action, isPending] = useActionState(createArticle, {
     errors: {},
   });
- 
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      if (file.size > 1 * 1024 * 1024) {  // 1MB = 1 * 1024 * 1024 bytes
+        setFileError("File size must be less than 1MB.");
+        setFeaturedImage(null);  // Clear the file if it's too large
+      } else {
+        setFileError("");  // Clear the error message
+        setFeaturedImage(file);  // Set the valid file
+      }
+    }
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,12 +41,16 @@ const CreateArticlePage = () => {
     const formData = new FormData(event.currentTarget);
     formData.append("content", cleanedContent);
   
+    // Append the file to form data if there is a valid file
+    if (featuredImage) {
+      formData.append("featuredImage", featuredImage);
+    }
+  
     startTransition(() => {
       action(formData);
     });
   };
-  
- 
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <Card>
@@ -67,8 +85,8 @@ const CreateArticlePage = () => {
                 <option value="programming">Programming</option>
                 <option value="web-development">Web Development</option>
                 <option value="CyberSecurity">CyberSecurity</option>
-                <option value="Science">Science</option> 
-                <option value="Politics">Politics</option> 
+                <option value="Science">Science</option>
+                <option value="Politics">Politics</option>
                 <option value="Food & Lifestyle">Food & Lifestyle</option>
                 <option value="HealthCare">HealthCare</option>
                 <option value="HotTopics">HotTopics</option>
@@ -88,7 +106,11 @@ const CreateArticlePage = () => {
                 name="featuredImage"
                 type="file"
                 accept="image/*"
+                onChange={handleFileChange}  // Add the file change handler
               />
+              {fileError && (
+                <span className="font-medium text-sm text-red-500">{fileError}</span>
+              )}
               {formState.errors.featuredImage && (
                 <span className="font-medium text-sm text-red-500">
                   {formState.errors.featuredImage}
@@ -98,11 +120,7 @@ const CreateArticlePage = () => {
 
             <div className="space-y-2">
               <Label>Content</Label>
-              <ReactQuill
-                theme="snow"
-                value={content}
-                onChange={setContent} 
-              />
+              <ReactQuill theme="snow" value={content} onChange={setContent} />
               {formState.errors.content && (
                 <span className="font-medium text-sm text-red-500">
                   {formState.errors.content[0]}
@@ -118,11 +136,11 @@ const CreateArticlePage = () => {
             )}
             <div className="flex justify-end gap-4">
               <Link href={"/dashboard"}>
-              <Button type="button" variant="outline" className="cursor-pointer">
-                Cancel
-              </Button>
+                <Button type="button" variant="outline" className="cursor-pointer">
+                  Cancel
+                </Button>
               </Link>
-              <Button disabled={isPending} type="submit" className="cursor-pointer">
+              <Button disabled={isPending || !!fileError} type="submit" className="cursor-pointer">
                 {isPending ? "Loading..." : "Publish Article"}
               </Button>
             </div>
@@ -131,6 +149,6 @@ const CreateArticlePage = () => {
       </Card>
     </div>
   );
-}
+};
 
 export default CreateArticlePage;

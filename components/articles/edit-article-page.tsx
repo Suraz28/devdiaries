@@ -14,12 +14,29 @@ import Link from "next/link";
 type EditPropsPage = {
   article: Articles;
 };
+
 const EditArticlePage: React.FC<EditPropsPage> = ({ article }) => {
   const [content, setContent] = useState(article.content);
+  const [featuredImage, setFeaturedImage] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string>("");
+
   const [formState, action, isPending] = useActionState(
     updateArticles.bind(null, article.id),
     { errors: {} }
   );
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      if (file.size > 1 * 1024 * 1024) {  // 1MB = 1 * 1024 * 1024 bytes
+        setFileError("File size must be less than 1MB.");
+        setFeaturedImage(null);  // Clear the file if it's too large
+      } else {
+        setFileError("");  // Clear the error message
+        setFeaturedImage(file);  // Set the valid file
+      }
+    }
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,7 +44,10 @@ const EditArticlePage: React.FC<EditPropsPage> = ({ article }) => {
     const formData = new FormData(event.currentTarget);
     formData.append("content", content);
 
-    // Wrap the action call in startTransition
+    if (featuredImage) {
+      formData.append("featuredImage", featuredImage);
+    }
+
     startTransition(() => {
       action(formData);
     });
@@ -106,18 +126,22 @@ const EditArticlePage: React.FC<EditPropsPage> = ({ article }) => {
                 name="featuredImage"
                 type="file"
                 accept="image/*"
+                onChange={handleFileChange}  // Add file change handler
               />
+              {fileError && (
+                <span className="font-medium text-sm text-red-500">{fileError}</span>
+              )}
               {formState.errors.featuredImage && (
                 <span className="font-medium text-sm text-red-500">
                   {formState.errors.featuredImage}
                 </span>
               )}
             </div>
+            
             <div className="space-y-2">
               <Label>Content</Label>
               <ReactQuill
                 theme="snow"
-                // defaultValue={}
                 value={content}
                 onChange={setContent}
               />
@@ -129,12 +153,16 @@ const EditArticlePage: React.FC<EditPropsPage> = ({ article }) => {
             </div>
 
             <div className="flex justify-end gap-4">
-            <Link href={"/dashboard"}>
-              <Button type="button" variant="outline" className="cursor-pointer">
-                Discard Changes
-              </Button>
+              <Link href={"/dashboard"}>
+                <Button type="button" variant="outline" className="cursor-pointer">
+                  Discard Changes
+                </Button>
               </Link>
-              <Button disabled={isPending} type="submit" className="cursor-pointer">
+              <Button
+                disabled={isPending || !!fileError}  // Disable if pending or file size error exists
+                type="submit"
+                className="cursor-pointer"
+              >
                 {isPending ? "Loading..." : "Update Article"}
               </Button>
             </div>
@@ -144,4 +172,5 @@ const EditArticlePage: React.FC<EditPropsPage> = ({ article }) => {
     </div>
   );
 };
+
 export default EditArticlePage;
