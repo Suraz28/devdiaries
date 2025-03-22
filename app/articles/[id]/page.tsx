@@ -8,7 +8,7 @@ type ArticleDetailPageProps = {
 };
 
 const Page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
-  const { id } = await params;  // Resolve the promise
+  const { id } = await params;
   const article = await prisma.articles.findUnique({
     where: {
       id,
