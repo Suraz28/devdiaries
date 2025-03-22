@@ -2,12 +2,13 @@ import ArticleDetailPage from "@/components/articles/article-detail-page";
 import { prisma } from "@/lib/prisma";
 import React from "react";
 
+
 type ArticleDetailPageProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{id:string}>
 };
 
-const page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
-  const id = (await params).id;
+const Page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
+  const { id } = await params;  // Resolve the promise directly here
   const article = await prisma.articles.findUnique({
     where: {
       id,
@@ -32,4 +33,4 @@ const page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
   );
 };
 
-export default page;
+export default Page;

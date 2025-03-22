@@ -1,3 +1,4 @@
+//articles->page.tsx
 import { Button } from "@/components/ui/button";
 import React, { Suspense } from "react";
 import { fetchArticleByQuery } from "@/lib/query/fetch-articles";
