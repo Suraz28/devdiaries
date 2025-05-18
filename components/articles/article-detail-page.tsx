@@ -22,7 +22,7 @@ type ArticleDetailPageProps = {
   }>;
 };
 
-const ArticleDetailPage = async({ article }: ArticleDetailPageProps) => {
+const ArticleDetailPage = async ({ article }: ArticleDetailPageProps) => {
   const comments = await prisma.comment.findMany({
     where: {
       articleId: article.id,
@@ -38,21 +38,16 @@ const ArticleDetailPage = async({ article }: ArticleDetailPageProps) => {
     },
   });
  
-  const likes = await prisma.like.findMany({where:{articleId:article.id}});
-  const {userId} = await auth();
-  const user = await prisma.user.findUnique({where:{clerkUserId:userId as string}});
+  const likes = await prisma.like.findMany({ where: { articleId: article.id } });
+  const { userId } = await auth();
+  const user = userId ? await prisma.user.findUnique({ where: { clerkUserId: userId } }) : null;
 
-  const isLiked = likes.some((like) => like.userId === user?.id);
+  const isLiked = user ? likes.some((like) => like.userId === user.id) : false;
   
-  
-
   return (
     <div className="min-h-screen bg-background">
-      {/* Reuse your existing Navbar */}
-
       <main className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <article className="mx-auto max-w-3xl">
-          {/* Article Header */}
           <header className="mb-12">
             <div className="flex flex-wrap gap-2 mb-4">
               <span className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
@@ -70,12 +65,8 @@ const ArticleDetailPage = async({ article }: ArticleDetailPageProps) => {
                 <AvatarFallback>{article.id}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-medium text-foreground">
-                  {article.author.name}
-                </p>
-                <p className="text-sm">
-                  {article.createdAt.toDateString()} · {4} min read
-                </p>
+                <p className="font-medium text-foreground">{article.author.name}</p>
+                <p className="text-sm">{article.createdAt.toDateString()} · 4 min read</p>
               </div>
             </div>
           </header>
@@ -86,8 +77,12 @@ const ArticleDetailPage = async({ article }: ArticleDetailPageProps) => {
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
 
-          {/* Article Actions */}
-          <LikeButton articleId={article.id} likes={likes} isLiked = {isLiked}/>
+          {/* Like Button - Only for Logged-in Users */}
+          {user ? (
+            <LikeButton articleId={article.id} likes={likes} isLiked={isLiked} />
+          ) : (
+            <p className="text-muted-foreground">Log in to like this article.</p>
+          )}
 
           {/* Comments Section */}
           <Card className="p-6">
@@ -98,16 +93,20 @@ const ArticleDetailPage = async({ article }: ArticleDetailPageProps) => {
               </h2>
             </div>
 
-            {/* Comment Form */}
-            <CommentForm articleId={article.id} />
+            {/* Comment Form - Only for Logged-in Users */}
+            {user ? (
+              <CommentForm articleId={article.id} />
+            ) : (
+              <p className="text-muted-foreground">Log in to comment on this article.</p>
+            )}
 
-            {/* Comments List */}
+            {/* Comments List - Always Visible */}
             <CommentList comments={comments} />
           </Card>
         </article>
       </main>
     </div>
   );
-}
+};
 
 export default ArticleDetailPage;
