@@ -1,5 +1,6 @@
 import ArticleDetailPage from "@/components/articles/article-detail-page";
 import { prisma } from "@/lib/prisma";
+import { notFound } from "next/navigation";
 import React from "react";
 
 
@@ -24,7 +25,7 @@ const Page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
     },
   });
   if (!article) {
-    return <h1>Article not found.</h1>;
+    notFound();
   }
   return (
     <div>

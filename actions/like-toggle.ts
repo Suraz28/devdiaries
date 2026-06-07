@@ -37,5 +37,5 @@ export async function toggleLike(articleId : string) {
   }
 
   // Return updated like count
-  revalidatePath(`/article/${articleId}`)
+  revalidatePath(`/articles/${articleId}`)
 }
