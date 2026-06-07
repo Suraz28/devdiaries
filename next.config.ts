@@ -13,14 +13,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: "/articles/:id",
-        destination: "/articles/:id",
-      },
-    ];
-  },
 };
 
 export default nextConfig;
