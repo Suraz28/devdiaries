@@ -3,11 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import RecentArticles from "./recent-articles";
 import { prisma } from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 
 export async function BlogDashboard() {
+  const clerkUser = await currentUser();
+  const user = clerkUser
+    ? await prisma.user.findUnique({ where: { clerkUserId: clerkUser.id } })
+    : null;
+
   const [articles, totalComments] = await Promise.all([
     prisma.articles.findMany({
+      where: { authorId: user?.id },
       orderBy: {
         createdAt: "desc",
       },
@@ -22,7 +29,7 @@ export async function BlogDashboard() {
         },
       },
     }),
-    prisma.comment.count(),
+    prisma.comment.count({ where: { article: { authorId: user?.id } } }),
   ]);
 
   return (

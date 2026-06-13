@@ -48,12 +48,14 @@ export function Navbar() {
               >
                 About
               </Link>
-              <Link
-                href="/dashboard"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                Dashboard
-              </Link>
+              <SignedIn>
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Dashboard
+                </Link>
+              </SignedIn>
             </div>
           
 
@@ -136,13 +138,15 @@ export function Navbar() {
               >
                 About
               </Link>
-              <Link
-                href="/dashboard"
-                className="block px-3 py-2 text-base font-medium text-foreground"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Dashboard
-              </Link>
+              <SignedIn>
+                <Link
+                  href="/dashboard"
+                  className="block px-3 py-2 text-base font-medium text-foreground"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+              </SignedIn>
             </div>
 
             {/* Mobile Auth Buttons */}
